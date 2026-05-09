@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Логопедический тренажер | Комплексы упражнений для педагога</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Noto Sans', system-ui, -apple-system, sans-serif;
+            background: #f0f7f5;
+            color: #1a2e2c;
+            line-height: 1.5;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        /* Шапка */
+        .header {
+            background: linear-gradient(135deg, #22577a, #2b7a62);
+            padding: 2rem 2rem 1.8rem;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 1.9rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.85;
+            max-width: 80%;
+        }
+
+        /* Табы */
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            background: #fff;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 0 1.5rem;
+            gap: 0.25rem;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 1rem 1.6rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #4a5b5e;
+            border-radius: 1rem 1rem 0 0;
+            font-family: inherit;
+        }
+
+        .tab-btn:hover {
+            background: #eef5f2;
+            color: #1f6e58;
+        }
+
+        .tab-btn.active {
+            color: #2b7a62;
+            background: #f0f7f5;
+            border-bottom: 3px solid #2b7a62;
+        }
+
+        /* Панели с контентом */
+        .panels {
+            padding: 2rem 2rem 2.5rem;
+        }
+
+        .panel {
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .panel.active-panel {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* сетка упражнений */
+        .exercises-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.6rem;
+            margin-top: 1rem;
+        }
+
+        .exercise-card {
+            background: #ffffff;
+            border-radius: 1.5rem;
+            border: 1px solid #e2edeb;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            transition: all 0.2s;
+            overflow: hidden;
+        }
+
+        .exercise-card:hover {
+            box-shadow: 0 12px 20px -12px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            padding: 1.2rem 1.4rem 0.6rem;
+            border-bottom: 1px dashed #d9e6e2;
+        }
+
+        .card-header h3 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #1f4e43;
+            margin-bottom: 0.4rem;
+        }
+
+        .author {
+            font-size: 0.8rem;
+            color: #6c8b86;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .goal {
+            background: #eef4f2;
+            padding: 0.5rem 0.8rem;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+            margin: 0.6rem 0;
+            color: #1b4e41;
+            border-left: 4px solid #2b7a62;
+        }
+
+        .goal strong {
+            font-weight: 700;
+        }
+
+        .btn-instr {
+            background: none;
+            border: 1px solid #cbdcd8;
+            padding: 0.5rem 1rem;
+            margin: 0 1.4rem 1rem 1.4rem;
+            width: calc(100% - 2.8rem);
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-family: inherit;
+            color: #2b7a62;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-instr:hover {
+            background: #2b7a62;
+            color: white;
+            border-color: #2b7a62;
+        }
+
+        .instruction-block {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            background: #fafefc;
+            border-top: 1px solid transparent;
+        }
+
+        .instruction-block.open {
+            max-height: 500px;
+            border-top: 1px solid #e0efea;
+            padding: 1rem 1.4rem 1.2rem;
+        }
+
+        .instr-content {
+            font-size: 0.9rem;
+            color: #2c423e;
+        }
+
+        .instr-content p {
+            margin-bottom: 0.7rem;
+        }
+
+        .instr-content .step-list {
+            padding-left: 1.2rem;
+            margin: 0.5rem 0;
+        }
+
+        hr {
+            margin: 0.5rem 0;
+            border-color: #d0e2dd;
+        }
+
+        /* памятка гигиена голоса */
+        .hygiene-wrapper {
+            background: #fefbf0;
+            border-radius: 1.8rem;
+            border: 1px solid #ffe7b3;
+            padding: 1.8rem;
+        }
+
+        .hygiene-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #b45f2b;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hygiene-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .hygiene-card {
+            background: white;
+            border-radius: 1.2rem;
+            padding: 1.2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-left: 6px solid #e6b17e;
+        }
+
+        .hygiene-card h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.6rem;
+            color: #a1551f;
+        }
+
+        .footer {
+            background: #eef3f1;
+            text-align: center;
+            padding: 1.2rem;
+            font-size: 0.8rem;
+            color: #527a70;
+            border-top: 1px solid #d4e2dd;
+        }
+
+        @media (max-width: 700px) {
+            .tabs {
+                padding: 0 0.5rem;
+            }
+            .tab-btn {
+                padding: 0.8rem 1rem;
+                font-size: 0.85rem;
+            }
+            .panels {
+                padding: 1.5rem;
+            }
+            .exercises-grid {
+                grid-template-columns: 1fr;
+            }
+            .header p {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🧠 Логопедический практикум</h1>
+        <p>Профессиональные упражнения для коррекции речевого дыхания, мышечного тонуса, акустических характеристик голоса и памятка по гигиене голосового аппарата.</p>
+    </div>
+
+    <div class="tabs" id="tabContainer">
+        <button class="tab-btn active" data-tab="dыхание">🌬️ Речевое дыхание</button>
+        <button class="tab-btn" data-tab="tonus">🧘 Снижение мышечного тонуса</button>
+        <button class="tab-btn" data-tab="acoustic">🎵 Акустика голоса</button>
+        <button class="tab-btn" data-tab="hygiene">🩺 Гигиена голоса</button>
+    </div>
+
+    <div class="panels">
+        <!-- Панель 1: Работа над речевым дыханием -->
+        <div class="panel active-panel" id="panel-dыхание">
+            <div class="exercises-grid" id="breathing-exercises"></div>
+        </div>
+
+        <!-- Панель 2: Работа над снижением мышечного тонуса -->
+        <div class="panel" id="panel-tonus">
+            <div class="exercises-grid" id="tonus-exercises"></div>
+        </div>
+
+        <!-- Панель 3: Работа над акустическими особенностями голоса -->
+        <div class="panel" id="panel-acoustic">
+            <div class="exercises-grid" id="acoustic-exercises"></div>
+        </div>
+
+        <!-- Панель 4: Гигиена голоса (памятка) -->
+        <div class="panel" id="panel-hygiene">
+            <div class="hygiene-wrapper">
+                <div class="hygiene-title">
+                    <span>📘</span> Памятка педагога: гигиена голоса
+                </div>
+                <div class="hygiene-grid" id="hygieneContent"></div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        © Логопедический инструментарий | Упражнения разработаны на основе клинико-педагогических подходов
+    </div>
+</div>
+
+<script>
+    // 1. ДАННЫЕ УПРАЖНЕНИЙ ДЛЯ ДЫХАНИЯ (полностью по заданию)
+    const breathingData = [
+        {
+            name: "«Паровоз»",
+            author: "Е.Э. Артемова, В.Т.А. Сорокина",
+            goal: "развивать навык плавного и равномерного фонационного выдоха и работа над координацией дыхания и голосообразования",
+            equipment: "не требуется",
+            procedure: "Из положения стоя, ноги на ширине плеч, одна ладонь лежит на нижней части грудной клетки. Сделать глубокий вдох носом и задержать дыхание на 3 секунды. Затем совершить серию ровных, плавных выдохов с произнесением «ПФ-ПФ-ПФ». Ладонью контролировать правильный тип дыхания. Необходимо 4-6 повторений.",
+            instructionText: "Встаньте ровно, ноги на ширине плеч. Одну ладонь поместите под ребра. Медленно вдохните носом. Ладонью проверяйте, что воздух набирается в правильном месте (диафрагма). Не поднимайте плечи. Задержите дыхание на 3 секунды. Затем выдыхайте воздух ровными и плавными толчками, сопровождая звуком «ПФ». Повторите 5 раз."
+        },
+        {
+            name: "«Ладошки»",
+            author: "А.Н. Стрельникова",
+            goal: "активизация диафрагмального типа дыхания",
+            equipment: "не требуется",
+            procedure: "Из положения стоя, ноги на ширине плеч, руки согнуты в локтях и прижаты к корпусу, ладони развернуты от себя, пальцы расслаблены. Сделать короткий «шумный» вдох носом. Одновременно с вдохом сжать ладони в кулак. После – спокойный выдох, разжать кулаки и расслабить пальцы. 10-13 повторений. Контролировать короткий вдох и длинный выдох.",
+            instructionText: "Встаньте ровно, ноги на ширине плеч, руки согните в локтях, ладони поверните от себя, пальцы не напрягайте. Сделайте громкий и резкий вдох носом и одновременно сожмите кулаки. Спокойно выдыхайте, разжимайте кулаки и расслабляйте пальцы. Повторите 10 раз."
+        },
+        {
+            name: "«Погончики»",
+            author: "А.Н. Стрельникова",
+            goal: "тренировать правильный тип дыхания и подготовить дыхательный аппарат к длительным нагрузкам",
+            equipment: "не требуется",
+            procedure: "Стоя ровно, ладони сжаты в кулак и находятся на поясе. Сделать громкий резкий вдох носом и сбросить руки с пояса. Ладони широко раскрыть, пальцы раздвинуть. Плечами помогать давить в пол. Без задержки дыхания сделать плавный выдох через рот, руки вернуть в прежнее положение. Повторить 8-10 раз.",
+            instructionText: "Встаньте прямо, руки сожмите в кулаки и поставьте на пояс. Резко и громко вдохните носом и одновременно резко опустите руки вниз. Пальцы разведите широко. Напрягите плечи, давите вниз. Не задерживая дыхания – выдохните через рот и верните кулаки на пояс. Повторите 8 раз."
+        },
+        {
+            name: "«Насос»",
+            author: "А.Н. Стрельникова",
+            goal: "активизация диафрагмального типа дыхания и улучшение вентиляции легких",
+            equipment: "не требуется",
+            procedure: "Из положения стоя, ноги чуть шире плеч, руки вытянуты вперед. Опустить корпус и сделать короткий вдох носом. Затем поднять корпус и сделать выдох.",
+            instructionText: "Встаньте ровно, ноги чуть шире плеч. Выставьте руки перед собой и слегка нагнитесь. Одновременно сделайте короткий вдох носом. Теперь поднимите корпус, выдыхайте воздух. Не задерживайте дыхание. Сделайте несколько повторений."
+        },
+        {
+            name: "«Приятный запах»",
+            author: "адаптация по методике резонансного дыхания",
+            goal: "снятие зажимов, мешающих резонансу голоса",
+            equipment: "не требуется",
+            procedure: "Найти удобную позу (стоя – ноги на ширине плеч/сидя – ноги на полу) с прямой спиной. Сделать серию из 3-4 коротких, резких выдохов через нос с поворотом головы на каждый выдох. После завершения серии выдохов сделать паузу и задержать дыхание на 2-3 секунды. Затем совершить длительный ровный выдох через рот с призвуком «Ф-Ф-Ф». Проверить отсутствие зажимов в шее, грудной клетке, животе.",
+            instructionText: "Встаньте или сядьте удобно, спину прямо. Представьте, что вы принюхиваетесь. Поворачивайте голову вправо – прямо – влево – прямо. На каждом повороте делайте резкий глубокий вдох носом. Плечи расслаблены. Задержите дыхание на 2-3 секунды. Затем плавный полный выдох со звуком «Ф». Почувствуйте расслабление шеи и грудной клетки."
+        }
+    ];
+
+    // 2. Упражнения для снижения мышечного тонуса
+    const tonusData = [
+        {
+            name: "«Поза эмбриона» (снятие тонуса грудной клетки и спины)",
+            author: "Кинезиологическая практика",
+            goal: "снижение мышечного гипертонуса грудной клетки, расслабление межреберных мышц и плечевого пояса",
+            equipment: "коврик или стул",
+            procedure: "Сидя на пятках или на стуле, наклонить корпус вперед, округлить спину, опустить голову, руки свободно вдоль тела. Сделать 3-4 глубоких диафрагмальных вдоха и выдоха. Задержаться в позе 20-30 секунд, концентрируясь на тяжести плеч и расслаблении грудной клетки.",
+            instructionText: "Сядьте удобно, опустите таз на пятки (или сядьте на стул). Плавно наклонитесь вперёд, округлите спину, позвольте голове свисать. Руки расслабленно лежат на коленях или вдоль туловища. Сделайте 5 циклов дыхания животом. Почувствуйте, как уходит напряжение из грудной клетки. Повторите после паузы 2-3 раза."
+        },
+        {
+            name: "«Мягкие вращения головой»",
+            author: "Логопедический массаж (элементы)",
+            goal: "снятие тонуса с мышц шеи, гортани и нижней челюсти",
+            equipment: "не требуется",
+            procedure: "Исходное положение сидя или стоя, спина прямая. Очень медленно, без рывков, выполнить наклоны головы вперёд-назад, затем вправо-влево, затем плавные круговые движения по часовой стрелке и против (амплитуда малая). Дыхание свободное.",
+            instructionText: "Сядьте прямо, плечи опущены. Медленно наклоните голову вперёд, коснитесь подбородком груди (без усилия). Вернитесь в нейтраль. Затем наклон назад — смотрим в потолок. Выполните 4 наклона в каждую сторону. Затем также медленно поверните голову вправо-влево. Завершите круговыми движениями: 3 круга в одну, 3 в другую. Контролируйте отсутствие боли."
+        },
+        {
+            name: "«Самомассаж лица и жевательных мышц»",
+            author: "Классический логопедический массаж",
+            goal: "снижение тонуса мышц артикуляционного аппарата, жевательной мускулатуры",
+            equipment: "чистые руки",
+            procedure: "Кончиками пальцев выполнять поглаживающие и разминающие движения от центра лица к периферии: лоб, щёки (по направлению к ушам), круговые движения в области скул, по нижней челюсти, лёгкое постукивание подбородка. Длительность 1-2 минуты.",
+            instructionText: "Тёплыми пальцами мягко погладьте лоб от середины к вискам. Затем щеки круговыми спиралевидными движениями. Подушечками указательного и среднего пальцев разотрите область около ушей (височно-нижнечелюстной сустав). Захватите подбородок снизу и легко постучите по нему тыльной стороной ладони. Выполняйте ежедневно по 2 минуты перед голосовыми нагрузками."
+        },
+        {
+            name: "«Дыхание с расслаблением плеч»",
+            author: "Телесно-ориентированная терапия",
+            goal: "снижение тонуса мышц верхнего плечевого пояса и грудной клетки",
+            equipment: "не требуется",
+            procedure: "Встать, ноги на ширине плеч. На вдохе плечи медленно поднять вверх, задержать на 1-2 секунды с напряжением, затем на выдохе «бросить» плечи вниз, полностью расслабляя. Повторить 6-8 раз.",
+            instructionText: "Ноги на ширине плеч, руки свободно висят. Вдохните через нос, поднимая плечи к ушам (чувствуйте напряжение). Задержите дыхание на 1 секунду. Выдыхайте со звуком «Хаа» и резко опустите плечи вниз, максимально расслабляя руки. Почувствуйте волну тепла в груди. 6-8 повторений."
+        }
+    ];
+
+    // 3. Упражнения для акустических особенностей голоса
+    const acousticData = [
+        {
+            name: "«Скользящая высота»",
+            author: "Вокально-речевая терапия",
+            goal: "развитие акустического диапазона, гибкости голоса, переключение регистров",
+            equipment: "не требуется",
+            procedure: "На удобной ноте произнести звук «М» или «У», скользя вверх и вниз по полутонам, расширяя диапазон без форсирования. Контролировать отсутствие зажимов в шее.",
+            instructionText: "Сядьте прямо, расслабьте плечи. Произнесите длительный звук «Ммм», как будто мычите. Начните с низкого тона и плавно поднимитесь вверх (как сирена), затем вернитесь вниз. Старайтесь, чтобы звук был ровным. Повторите 5 раз на разные гласные: У, О, А."
+        },
+        {
+            name: "«Гудок парохода» (резонанс грудного регистра)",
+            author: "Методика Ф. Штрепплера",
+            goal: "усиление грудного резонанса, обогащение акустической окраски голоса",
+            equipment: "не требуется",
+            procedure: "Глубокий вдох, затем на выдохе произнести звук «У-У-У» низким, гудящим тембром, ощущая вибрацию в грудине. Ладонь на груди контролирует вибрацию.",
+            instructionText: "Сделайте спокойный вдох. На выдохе с закрытым ртом начните «У-У-У» максимально низко и гулко. Положите ладонь на верхнюю часть грудной клетки — вы должны чувствовать вибрацию. Длительность выдоха 5-7 секунд. Повтор 6 раз."
+        },
+        {
+            name: "«Эхо в горах»",
+            author: "Логопедическая фонопедия",
+            goal: "тренировка четкой дикции и динамической гибкости голоса (тихо–громко)",
+            equipment: "не требуется",
+            procedure: "Произносить слоги МА-МО-МУ-МЭ-МИ сначала шёпотом, затем тихо, далее в полную силу, и постепенно затухая до шёпота, сохраняя чистоту акустического образа.",
+            instructionText: "Сядьте, спину прямо. Произнесите цепочку МА-МО-МУ (или другую) с разной громкостью: первое слово шёпотом, второе — тихо, третье — громко (но без крика), четвёртое — снова тихо, пятое — шёпот. Контролируйте, чтобы интонация не срывалась. Повторите 3 цикла."
+        },
+        {
+            name: "«Звенящие согласные»",
+            author: "Артикуляционно-акустический тренинг",
+            goal: "активизация звонкости голоса, улучшение акустического соотношения звонких/глухих",
+            equipment: "не требуется",
+            procedure: "Произносить длительно парные звонкие согласные (З-З-З, Ж-Ж-Ж, В-В-В), затем слоги с этими звуками, добиваясь ощущения вибрации в глотке, твёрдом нёбе.",
+            instructionText: "На спокойном выдохе протяжно произнесите «З-З-З-З», положив руку на гортань — ощутите вибрацию. Затем чередуйте «С-С-С» (глухой) и «З-З-З» (звонкий), чтобы почувствовать разницу. После переходите к слогам ЗА-ЗО-ЗУ, ЖА-ЖО-ЖУ. Упражнение улучшает акустическую насыщенность голоса."
+        }
+    ];
+
+    // Данные для памятки гигиены голоса (структурированные советы)
+    const hygieneTips = [
+        { title: "💧 Увлажнение", text: "Пейте тёплую воду комнатной температуры малыми глотками на протяжении дня. Избегайте кофеина и газированных напитков перед голосовой нагрузкой." },
+        { title: "🔇 Голосовой режим", text: "Не кричите, не шепчите длительно (шёпот перегружает связки). Говорите спокойно, без форсирования. После 45 мин непрерывной речи делайте 5-10 мин паузу." },
+        { title: "🌬️ Увлажнение воздуха", text: "В помещениях с сухим воздухом (особенно зимой) используйте увлажнители. Оптимальная влажность 50-70%. Сухой воздух иссушает слизистую голосовых складок." },
+        { title: "🚫 Вредные привычки", text: "Курение и алкоголь негативно влияют на микроциркуляцию и эластичность голосовых складок, провоцируют отёки." },
+        { title: "😴 Отдых и осанка", text: "Спите не менее 7-8 часов, избегайте сна на высокой подушке (напрягает шею). Следите за правильной осанкой — сколиоз и наклон головы изменяют резонанс." },
+        { title: "🍋 Питание", text: "Избегайте слишком острой, горячей или холодной пищи перед выступлением. Полезны: мёд (при отсутствии аллергии), тёплое молоко, отвар ромашки." }
+    ];
+
+    // Функция создания карточки упражнения (с возможностью раскрытия инструкции)
+    function createExerciseCard(ex, index, categoryId) {
+        const card = document.createElement('div');
+        card.className = 'exercise-card';
+
+        const headerDiv = document.createElement('div');
+        headerDiv.className = 'card-header';
+        headerDiv.innerHTML = `
+            <h3>${ex.name}</h3>
+            ${ex.author ? `<div class="author">📖 ${ex.author}</div>` : `<div class="author" style="opacity:0.7;">🔍 методическая практика</div>`}
+            <div class="goal"><strong>🎯 Цель:</strong> ${ex.goal}</div>
+            ${ex.equipment ? `<div style="font-size:0.8rem; margin:0.4rem 0; color:#557c6f;">🛠 Оборудование: ${ex.equipment}</div>` : ''}
+        `;
+
+        const btn = document.createElement('button');
+        btn.className = 'btn-instr';
+        btn.innerHTML = '📖 Показать инструкцию';
+
+        const instrBlock = document.createElement('div');
+        instrBlock.className = 'instruction-block';
+
+        // Формируем содержимое инструкции: Ход проведения + инструкция для педагога
+        let instrHtml = `<div class="instr-content">
+                            <p><strong>📌 Ход выполнения:</strong> ${ex.procedure || ''}</p>
+                            <hr>
+                            <p><strong>🧑‍🏫 Инструкция педагогу (алгоритм):</strong><br> ${ex.instructionText || ex.procedure || 'Выполняйте согласно описанной методике.'}</p>
+                         </div>`;
+        instrBlock.innerHTML = instrHtml;
+
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = instrBlock.classList.contains('open');
+            // закрыть все инструкции в этой панели (опционально, но для удобства)
+            if (!isOpen) {
+                // необязательно закрывать все другие, но сделаем комфортнее – закрываем только если хотим аккордеон в рамках карточки
+            }
+            instrBlock.classList.toggle('open');
+            btn.innerHTML = instrBlock.classList.contains('open') ? '📘 Скрыть инструкцию' : '📖 Показать инструкцию';
+        });
+
+        card.appendChild(headerDiv);
+        card.appendChild(btn);
+        card.appendChild(instrBlock);
+        return card;
+    }
+
+    function renderBreathing() {
+        const container = document.getElementById('breathing-exercises');
+        container.innerHTML = '';
+        breathingData.forEach((ex, idx) => {
+            container.appendChild(createExerciseCard(ex, idx, 'breathing'));
+        });
+    }
+
+    function renderTonus() {
+        const container = document.getElementById('tonus-exercises');
+        container.innerHTML = '';
+        tonusData.forEach((ex, idx) => {
+            container.appendChild(createExerciseCard(ex, idx, 'tonus'));
+        });
+    }
+
+    function renderAcoustic() {
+        const container = document.getElementById('acoustic-exercises');
+        container.innerHTML = '';
+        acousticData.forEach((ex, idx) => {
+            container.appendChild(createExerciseCard(ex, idx, 'acoustic'));
+        });
+    }
+
+    function renderHygiene() {
+        const container = document.getElementById('hygieneContent');
+        container.innerHTML = '';
+        hygieneTips.forEach(tip => {
+            const card = document.createElement('div');
+            card.className = 'hygiene-card';
+            card.innerHTML = `<h4>${tip.title}</h4><p>${tip.text}</p>`;
+            container.appendChild(card);
+        });
+    }
+
+    // Таб-логика
+    function initTabs() {
+        const tabs = document.querySelectorAll('.tab-btn');
+        const panels = document.querySelectorAll('.panel');
+
+        tabs.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.getAttribute('data-tab');
+                // деактивация кнопок
+                tabs.forEach(bt => bt.classList.remove('active'));
+                btn.classList.add('active');
+                // скрыть панели
+                panels.forEach(panel => panel.classList.remove('active-panel'));
+                const activePanel = document.getElementById(`panel-${tabId}`);
+                if (activePanel) activePanel.classList.add('active-panel');
+            });
+        });
+    }
+
+    // Рендер всех секций
+    renderBreathing();
+    renderTonus();
+    renderAcoustic();
+    renderHygiene();
+    initTabs();
+</script>
+</body>
+</html>
